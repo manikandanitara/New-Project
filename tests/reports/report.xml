@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+  		  <report 
+            id="report_bookmain" 
+    		    string="Book" 
+    		    model="book.detail" 
+    		    report_type="qweb-pdf"
+    		    file="tests.report_book1" 
+    		    name="tests.report_book1" 
+  		  />
+
+  		<!-- <template id="report_book_template">   
+  			<t t-call="report.html_container"> 
+    			<t t-call="report.external_layout">
+      			<div class="page"> -->
+        <!-- Report page content -->
+                <!-- <strong t-if="doc.author == doc.name">Book Detail:</strong> 
+                <div t-field="doc.author"
+                    t-options='{"widget": "detail", "fields": ["title", "author"], "no_marker": True}'/>
+                </div> 
+      				</div>  
+    			</t> 
+  			</t> 
+		  </template>--> 
+
+    </data> 
+</odoo> 

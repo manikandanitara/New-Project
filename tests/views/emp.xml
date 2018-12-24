@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="book_tree_view" model="ir.ui.view">
+			<field name="name">book.tree</field>
+			<field name="model">book.detail</field>
+			<field name="arch" type="xml">
+		        <tree string="Book">
+		            <field name="name"/>
+                    <!-- <field name="partner_id"/> -->
+		            <field name="author"/>
+                    <field name="nature"/>
+
+		        </tree>
+		    </field>
+		</record>
+
+        <record id="book_form_view" model="ir.ui.view">
+            <field name="name">book.form</field>
+            <field name="model">book.detail</field>
+            <field name="arch" type="xml">
+                <form string="Book">
+                    <!-- <field name="send_id">
+                        <header>
+                           <button name="action_send_quotation" type="object" string="Sample" class="btn-primary"/>
+                        </header>
+                    </field>--> 
+                    <header>
+                        <!-- <field name="send_id"> -->
+                        <!-- <button name="action_drafts" type="object" string="Set Quotations" class="btn-primary"/> -->
+                        <button name="action_send_quotation" type="object" string="Sample" class="btn-primary"/> 
+                        <!-- </field> -->
+                        <!-- <button name="action_send" type="object" string="Send Quotation" class="btn-primary"/>   -->
+                        <button name="action_draft" type="object" string="Set Quotation" states="cancel" class="oe_highlight"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
+                        <button name="action_done" type="object" string="Mark as done" states="confirmed" class="oe_highlight"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="draft,confirmed" class="oe_highlight"/>
+                        <button name="action_print" type="object" string="Print" states="draft,confirmed" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+
+
+                    </header>
+   
+                    <sheet>
+                        <field name="image" widget='image' class="oe_avatar"/> 
+                        <group>
+                            <group>
+                                <!-- <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>  -->
+                                <!-- <field name="image" widget='image' class="oe_avatar"/> -->
+                                <field name="name"/>
+                                <field name="desc" readonly="0"/>
+                                <field name="author"/>
+                                <field name="nature"/>
+                                <field name="partner_id"/>
+                                <!-- <field name="family_detail_ids"/> -->
+                            </group>
+                            
+                            <group>    
+                                
+                                <!-- <field name="date" attrs="{'invisible': [('desc', '=', False)] , 'required': [('nature', 'in', ['story','bibiliography'])]}"/> -->
+                                <!-- <field name="day"/> -->
+                                <field name="stage_fold"/>
+                                <field name="reference_Doc"/>
+                                <!-- <field name="attachment" /> -->
+                                <field name="book_id"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="effort_estimate"/> 
+
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Book Details">
+                                <field name="family_detail_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" />
+                                        <field name="attachment" />
+                                        <field name="notes"/>
+                                    </tree>
+                                </field>
+                                <tree>
+                                 <field name="tag_ids" widget="many2many_tags"/>
+                                </tree>
+
+                            </page>
+                        </notebook>
+                        <!-- <field name="note"/> -->
+                    </sheet>            
+                </form>
+            </field>
+        </record>
+
+        <record id="sendq_form_view" model="ir.ui.view">
+            <field name="name">Sendq.form</field>
+            <field name="model">sendq.detail</field>
+            <field name="arch" type="xml">
+                <form string="Books">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="mailid"/>
+                        </group>
+                    </group>
+          <!-- Form design for your fields -->
+                    <!-- <footer>
+                        <button name="action_send_quotation" type="object" string="Sample" class="btn-primary"/>
+                    </footer>-->
+                </form>
+            </field>
+        </record>
+
+         <record id="action_send_quotationed" model="ir.actions.act_window">
+            <field name="name">Generate Quotation</field>
+            <field name="res_model">sendq.detail</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sendq_form_view"/>
+            <!-- <field name="usage">menu</field> -->
+            <!-- <field name="target">new</field> -->
+        </record>
+ 
+
+
+        <record model="ir.ui.view" id="view_book_kanban">
+            <field name="name">book.kanban</field>
+            <field name="model">book.detail</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_kanban_mobile">
+                    <!-- <field name="family_detail_ids"> -->
+                    <!--<field name="title"/>
+                    <field name="author"/>
+                    <field name="nature"/> -->
+                    <field name="effort_estimate"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_{{kanban_getcolor(record.effort_estimate.raw_value)}}	 
+						  oe_kanban_global_click_edit oe_semantic_html_override
+						  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                            <!-- <t t-if="record.default_code.value> -->
+				                <a type="open"> 
+					               <img t-att-src="kanban_image('book.detail', 'image', record.id._value)" class="oe_kanban_image"/>
+                                </a>   
+                                
+                            <!-- </t> -->
+                                <div class="oe_dropdown_kanban">
+                                    <!-- dropdown menu -->
+                                    <div class="oe_dropdown_toggle">
+                                        <i class="fa fa-bars fa-lg"/>
+                                        <ul class="oe_dropdown_menu">
+                                            <li>
+                                                <a type="delete">Delete</a>
+                                            </li>
+                                            <li>
+                                                <ul class="oe_kanban_colorpicker"
+                                                    data-field="effort_estimate"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                                <div t-attf-class="oe_kanban_content">
+                                    <!-- title -->
+                                    Book name:
+                                    <field name="name"/>
+                                    <br/>
+                                    Author name:
+                                    <field name="author"/>
+                                    <br/>
+                                    Nature:
+                                    <field name="nature"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record id="view_graph_book" model="ir.ui.view">
+            <field name="name">book.graph</field>   
+            <field name="model">book.detail</field> 
+            <field name="arch" type="xml"> 
+                <graph type="bar"> 
+                    <field name="name" /> 
+                    <field name="effort_estimate" type="measure" /> 
+                </graph>
+            </field> 
+        </record>
+
+	   <record id="view_pivot_book" model="ir.ui.view">
+            <field name="name">book.pivot</field>   
+            <field name="model">book.detail</field> 
+            <field name="arch" type="xml"> 
+                <pivot string="AllBooks"> 
+                    <field name="name" type="row"/> 
+                    <field name="effort_estimate" type="col" /> 
+                </pivot>
+            </field> 
+        </record>
+
+	   <record id="view_calendar_book" model="ir.ui.view">
+            <field name="name">book.calendar</field>   
+            <field name="model">book.detail</field> 
+            <field name="arch" type="xml"> 
+                <calendar string="Books" date_start="date" date_stop="day" color="effort_estimate"> 
+                    <field name="name"/> 
+                     
+                </calendar>
+            </field> 
+        </record>
+
+
+
+
+
+        <record model="ir.ui.view" id="book_search_view">
+            <field name="name">book.search</field>
+            <field name="model">book.detail</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <!-- <field name="description"/> -->
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_book_form" model="ir.actions.act_window">
+            <field name="name">book</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">book.detail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,pivot,calendar,graph</field>
+
+
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Author Detail
+                </p>
+            </field>
+            
+        </record>
+
+        <!-- <record id="action_intern_form" model="ir.actions.act_window">
+            <field name="name">intern</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">intern.detail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+ -->
+
+    
+
+        <record id="view_order_tree_test" model="ir.ui.view"> 
+            <field name="name">sale.order.test</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='partner_id']" position="after">
+                    <field name="cust_ref"/>
+                </xpath>
+                
+                                   
+            </field>
+        </record>
+
+
+
+        <record id="view_order_form_test" model="ir.ui.view"> 
+            <field name="name">sale.order.test</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group/group/field[@name='payment_term_id']" position="after">
+                    <field name="due_date"/>
+                    <field name="costprice"/>
+                    <field name="shippingcost"/>
+                    <field name="Tax"/>
+                </xpath>
+                <xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="after">
+                    <field name="cust_ref"/>
+                </xpath>
+                <!-- <xpath expr="/form/header/button[@button name='action_confirm']" position="after">
+                    <button name="action_act" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" />
+                </xpath> --> 
+                
+            </field>
+        </record>
+
+        <record id="view_purchase_form_test" model="ir.ui.view"> 
+            <field name="name">purchase.order.test</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group/group/field[@name='date_order']" position="after">
+                    <field name="due_date"/>
+                </xpath>
+                                       
+            </field>
+        </record>
+
+        <record id="action_purchase_form" model="ir.actions.act_window">
+            <field name="name">purchase</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+
+        <menuitem name="Book" id="book_menu"/>
+
+        <menuitem name="Book Group" id="book_group_menu" parent="book_menu"/>
+
+        <menuitem name="Books" parent="book_group_menu" id="book_menu_mainform" action="action_book_form"/>
+        <!-- <menuitem name="Interns" parent="book_group_menu" id="intern_menu_form" action="action_intern_form"/> -->
+
+    <!-- <wizard string="Books Info"
+            model="sendq.detail"
+            name="Sending Quotation"
+            id="wizard_book_info"/>
+    <menuitem
+            name="Books Info"
+            action="wizard_book_info"
+            type="wizard"
+            id="menu_wizard_book_info"/> -->
+
+        <menuitem name="Sample" id="books_context" action="action_send_quotationed" parent="book_group_menu"/>
+        <menuitem name="Purchase" id="books_purchase" action="action_purchase_form" parent="book_group_menu"/>
+    </data>
+</odoo>

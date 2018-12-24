@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_book_document">
+    <t t-call="report.external_layout">
+        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})"/>
+        <div class="page">
+            <div class="oe_structure"/>
+            <div class="row">
+                <div class="col-xs-6">
+                    <strong>Book Detail:</strong>  
+                    <div t-field="doc.name" />
+                    <div t-field="doc.author"/>
+                    <div t-field="doc.nature"/>
+                    <div t-field="doc.book_id"/>
+                </div>
+                <div t-if="doc.day" class="col-xs-3">
+                    <!-- <strong t-if="doc.state not in ['draft','sent']">Date Ordered:</strong> -->
+                    <strong t-if="doc.state in ['draft','confirmed']">Updation Date:</strong>
+                    <p t-field="doc.day"/>
+                </div>
+                <div t-if="doc.date" class="col-xs-3">
+                    <strong>Date of writing</strong>
+                    <p t-field="doc.date"/>
+                </div>
+                <t t-as="page">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-right">Name</th>
+                                <th class="text-right">Files</th>
+                                <th class="text-right">Note</th>
+                                <!-- <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>  -->
+                                <!-- <th class="text-right">Taxes</th> -->
+                                <!-- <th class="text-right" groups="sale.group_show_price_subtotal">Price</th> -->
+                                <!-- <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th> -->
+                            </tr>
+                        </thead>
+                        <!-- <tbody class="tests_tbody"> 
+                        <t t-foreach="page" t-as="layout_category">
+
+                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                                <tr class="active">
+                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                        <t t-esc="layout_category['name']"/>
+                                    </td>
+                                </tr>
+                            </t>-->
+
+                    </table>
+                </t>       
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="report_book1"> 
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="tests.report_book_document" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>
+
